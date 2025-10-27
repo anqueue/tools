@@ -1,15 +1,25 @@
 import {
   Button,
+  Card,
   Combobox,
+  Divider,
   Flex,
   Group,
   InputWrapper,
   NumberInput,
+  Table,
   Text,
   useCombobox,
 } from "@mantine/core";
 import { getHotkeyHandler } from "@mantine/hooks";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  forwardRef,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { BASE_INDEX, SI_PREFIXES } from "~/utils/consts";
 
 export default function OhmsCalculator() {
@@ -47,6 +57,7 @@ export default function OhmsCalculator() {
     currentCalculated: 0,
     resistanceCalculated: 0,
   });
+  const [history, setHistory] = useState<HistoryItem[]>([]);
 
   useEffect(() => {
     if (flashField) {
@@ -157,6 +168,26 @@ export default function OhmsCalculator() {
               currentCalculated: 0,
               resistanceCalculated: 0,
             });
+            setHistory([
+              ...history,
+              {
+                voltageInput: currentVoltage,
+                currentInput: currentCurrent,
+                resistanceInput: currentResistance,
+                voltageOutput: result,
+                currentOutput: getValue("current"),
+                resistanceOutput: getValue("resistance"),
+                voltageSiIndex: SI_PREFIXES.findIndex(
+                  (p) => p.value === voltPrefix.value
+                ),
+                currentSiIndex: SI_PREFIXES.findIndex(
+                  (p) => p.value === currentPrefix.value
+                ),
+                resistanceSiIndex: SI_PREFIXES.findIndex(
+                  (p) => p.value === resistancePrefix.value
+                ),
+              },
+            ]);
             setFlashField("voltage");
           }
           break;
@@ -172,6 +203,26 @@ export default function OhmsCalculator() {
               currentCalculated: result,
               resistanceCalculated: 0,
             });
+            setHistory([
+              ...history,
+              {
+                voltageInput: currentVoltage,
+                currentInput: currentCurrent,
+                resistanceInput: currentResistance,
+                voltageOutput: getValue("voltage"),
+                currentOutput: result,
+                resistanceOutput: getValue("resistance"),
+                voltageSiIndex: SI_PREFIXES.findIndex(
+                  (p) => p.value === voltPrefix.value
+                ),
+                currentSiIndex: SI_PREFIXES.findIndex(
+                  (p) => p.value === currentPrefix.value
+                ),
+                resistanceSiIndex: SI_PREFIXES.findIndex(
+                  (p) => p.value === resistancePrefix.value
+                ),
+              },
+            ]);
             setFlashField("current");
           }
           break;
@@ -187,6 +238,26 @@ export default function OhmsCalculator() {
               currentCalculated: 0,
               resistanceCalculated: result,
             });
+            setHistory([
+              ...history,
+              {
+                voltageInput: currentVoltage,
+                currentInput: currentCurrent,
+                resistanceInput: currentResistance,
+                voltageOutput: getValue("voltage"),
+                currentOutput: result,
+                resistanceOutput: getValue("resistance"),
+                voltageSiIndex: SI_PREFIXES.findIndex(
+                  (p) => p.value === voltPrefix.value
+                ),
+                currentSiIndex: SI_PREFIXES.findIndex(
+                  (p) => p.value === currentPrefix.value
+                ),
+                resistanceSiIndex: SI_PREFIXES.findIndex(
+                  (p) => p.value === resistancePrefix.value
+                ),
+              },
+            ]);
             setFlashField("resistance");
           }
           break;
@@ -283,6 +354,7 @@ export default function OhmsCalculator() {
             </Button>
           </InputWrapper>
         </Group>
+        <History history={history} />
       </Flex>
     </>
   );
@@ -411,3 +483,63 @@ const InputWithPrefix = forwardRef<
     </InputWrapper>
   );
 });
+
+type HistoryItem = {
+  voltageInput: number;
+  currentInput: number;
+  resistanceInput: number;
+  voltageOutput: number;
+  currentOutput: number;
+  resistanceOutput: number;
+  voltageSiIndex: number;
+  currentSiIndex: number;
+  resistanceSiIndex: number;
+};
+
+function History({ history }: { history: HistoryItem[] }) {
+  return (
+    <>
+      <Divider label="History" />
+      <Table>
+        <Table.Thead>
+          <Table.Tr>
+            <Table.Th>Voltage</Table.Th>
+            <Table.Th>Current</Table.Th>
+            <Table.Th>Resistance</Table.Th>
+            <Table.Th>Action</Table.Th>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>
+          {history.length > 0 ? (
+            history.reverse().map((item) => (
+              <Table.Tr key={item.voltageInput}>
+                <Table.Td>
+                  {(item.voltageInput || item.voltageOutput) /
+                    SI_PREFIXES[item.voltageSiIndex].value}
+                  {SI_PREFIXES[item.voltageSiIndex].prefix}V
+                </Table.Td>
+                <Table.Td>
+                  {(item.currentInput || item.currentOutput) /
+                    SI_PREFIXES[item.currentSiIndex].value}
+                  {SI_PREFIXES[item.currentSiIndex].prefix}A
+                </Table.Td>
+                <Table.Td>
+                  {(item.resistanceInput || item.resistanceOutput) /
+                    SI_PREFIXES[item.resistanceSiIndex].value}
+                  {SI_PREFIXES[item.resistanceSiIndex].prefix}Ω
+                </Table.Td>
+                <Table.Td>{/*  */}</Table.Td>
+              </Table.Tr>
+            ))
+          ) : (
+            <Table.Tr>
+              <Table.Td colSpan={3} ta="center" my="md">
+                No history
+              </Table.Td>
+            </Table.Tr>
+          )}
+        </Table.Tbody>
+      </Table>
+    </>
+  );
+}
