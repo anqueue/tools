@@ -325,7 +325,15 @@ const InputWithPrefix = forwardRef<
         onKeyDown={getHotkeyHandler([
           ["k", () => onPrefixChange(SI_PREFIXES[3])],
           ["space", () => onPrefixChange(SI_PREFIXES[BASE_INDEX])],
-          ["m", () => onPrefixChange(SI_PREFIXES[5])],
+          // Resistors are very rarely in milli and more common in mega, so for resistance input, m means mega
+          // Hopefully this isn't a weird UX issue but rather something helpful
+          [
+            "m",
+            () =>
+              onPrefixChange(
+                label === "Resistance" ? SI_PREFIXES[2] : SI_PREFIXES[5]
+              ),
+          ],
           ["u", () => onPrefixChange(SI_PREFIXES[6])],
           ["n", () => onPrefixChange(SI_PREFIXES[7])],
           ["p", () => onPrefixChange(SI_PREFIXES[8])],
