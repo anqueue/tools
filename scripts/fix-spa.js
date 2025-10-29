@@ -1,5 +1,5 @@
-import { mkdir, readdir } from "node:fs/promises";
-import { existsSync, join, parse, symlink, unlink } from "node:path";
+import { readdir, mkdir, copyFile } from "node:fs/promises";
+import { join, parse } from "node:path";
 
 const buildDir = "./build/client";
 const routesDir = "./app/routes";
@@ -36,27 +36,17 @@ async function setupSPA() {
     console.log("Found routes:", routes);
 
     for (const route of routes) {
-      const routePath = join(buildDir, route);
-      const htmlPath = join(routePath, "index.html");
-      const targetPath = join(
-        "..".repeat(route.split("/").length),
-        "index.html"
+      // Create the directory for the route
+      const routeDir = join(buildDir, route);
+      await mkdir(routeDir, { recursive: true });
+
+      // Copy index.html to the route directory
+      await copyFile(
+        join(buildDir, "index.html"),
+        join(routeDir, "index.html")
       );
 
-      // Create the route directory
-      await mkdir(routePath, { recursive: true });
-
-      // Option 1: Create a symlink (uncomment to use)
-      try {
-        // Remove existing symlink if it exists
-        if (existsSync(htmlPath)) {
-          await unlink(htmlPath);
-        }
-        await symlink(targetPath, htmlPath);
-        console.log(`✓ Created symlink for ${route}`);
-      } catch (error) {
-        console.error(`Failed to create symlink for ${route}:`, error);
-      }
+      console.log(`✓ Copied index.html to ${route}`);
     }
   } catch (error) {
     console.error("Error setting up SPA:", error);
