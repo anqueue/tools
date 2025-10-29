@@ -1,6 +1,7 @@
 import { Container, Tabs, Title } from "@mantine/core";
-import { Outlet, useNavigate } from "@remix-run/react";
+import { Outlet, useLocation, useNavigate } from "@remix-run/react";
 import { useState } from "react";
+import GitHubButton from "~/components/GitHubLogo";
 
 const PAGES: {
   title: string;
@@ -25,7 +26,10 @@ const PAGES: {
 ];
 
 export default function Calculator() {
-  const [activeTab, setActiveTab] = useState(PAGES[0].path);
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(
+    PAGES.find((page) => page.path === location.pathname)?.path || PAGES[0].path
+  );
   const navigate = useNavigate();
 
   const handleTabChange = (value: string | null) => {
@@ -35,9 +39,38 @@ export default function Calculator() {
 
   return (
     <Container mt="xl">
-      <Title ta="center" order={2} mb="sm">
-        Tools
-      </Title>
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          marginBottom: "var(--mantine-spacing-sm)",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            right: 0,
+            top: "50%",
+            transform: "translateY(-50%)",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <GitHubButton />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <Title order={2} c="var(--mantine-color-gray-4  )">
+            Electrical Calculator
+          </Title>
+        </div>
+      </div>
       <Tabs
         variant="pills"
         defaultValue={PAGES[0].path}

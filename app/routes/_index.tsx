@@ -1,16 +1,17 @@
-import { Button } from "@mantine/core";
-import { Link, MetaFunction } from "@remix-run/react";
+import { MetaFunction, useNavigate } from "@remix-run/react";
+import { useEffect } from "react";
+import Calculator from "./calculator";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Homepage" }, { name: "description", content: "Homepage" }];
 };
 
 export default function Index() {
-  return (
-    <div>
-      <Button component={Link} to="/calculator">
-        Calculator
-      </Button>
-    </div>
-  );
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/calculator");
+  }, [navigate]);
+
+  return <Calculator />;
 }
