@@ -1,5 +1,5 @@
-import { mkdir, readdir, writeFile } from "node:fs/promises";
-import { dirname, join, parse } from "node:path";
+import { mkdir, readdir } from "node:fs/promises";
+import { existsSync, join, parse, symlink, unlink } from "node:path";
 
 const buildDir = "./build/client";
 const routesDir = "./app/routes";
@@ -29,36 +29,6 @@ async function getRoutes(dir) {
   return routes;
 }
 
-async function createHtmlRedirect(targetPath, outputPath) {
-  const template = `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script>
-    // Get the relative path to the root index.html
-    const pathToRoot = location.pathname.split('/').slice(1, -1).map(() => '..').join('/') || '.';
-    // Fetch the root index.html
-    fetch(\`\${pathToRoot}/index.html\`)
-      .then(response => response.text())
-      .then(html => {
-        document.documentElement.innerHTML = html;
-        // Update base href if needed
-        const base = document.createElement('base');
-        base.href = '/';
-        document.head.prepend(base);
-      });
-  </script>
-</head>
-<body>
-  <p>Loading...</p>
-</body>
-</html>`;
-
-  await mkdir(dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, template);
-}
-
 async function setupSPA() {
   try {
     // Get all routes from the routes directory
@@ -77,7 +47,6 @@ async function setupSPA() {
       await mkdir(routePath, { recursive: true });
 
       // Option 1: Create a symlink (uncomment to use)
-      /*
       try {
         // Remove existing symlink if it exists
         if (existsSync(htmlPath)) {
@@ -88,11 +57,6 @@ async function setupSPA() {
       } catch (error) {
         console.error(`Failed to create symlink for ${route}:`, error);
       }
-      */
-
-      // Option 2: Create an HTML file that fetches from root (default)
-      await createHtmlRedirect(targetPath, htmlPath);
-      console.log(`✓ Created redirect HTML for ${route}`);
     }
   } catch (error) {
     console.error("Error setting up SPA:", error);
