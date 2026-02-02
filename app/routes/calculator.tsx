@@ -23,6 +23,11 @@ const PAGES: {
     path: "/calculator/ohms",
     icon: null,
   },
+  {
+    title: "SI Prefixes",
+    path: "/calculator/units",
+    icon: null,
+  },
 ];
 
 export default function Calculator() {
