@@ -1,6 +1,5 @@
 import {
   Button,
-  Card,
   Combobox,
   Divider,
   Flex,
@@ -12,14 +11,7 @@ import {
   useCombobox,
 } from "@mantine/core";
 import { getHotkeyHandler } from "@mantine/hooks";
-import {
-  Dispatch,
-  forwardRef,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { BASE_INDEX, SI_PREFIXES } from "~/utils/consts";
 
 export default function OhmsCalculator() {
@@ -289,72 +281,80 @@ export default function OhmsCalculator() {
           You can also use the hotkeys: k, m, u, n, p, space for the SI prefixes
           and enter to calculate.
         </Text>
-        <Group grow justify="center">
-          <InputWithPrefix
-            ref={voltageRef}
-            label="Voltage"
-            value={Number(voltage)}
-            onChange={setVoltage}
-            prefix={voltPrefix}
-            onPrefixChange={setVoltPrefix}
-            unit="V"
-            calculate={calculate}
-            isFlash={flashField === "voltage"}
-          />
-          <InputWithPrefix
-            ref={currentRef}
-            label="Current"
-            value={Number(current)}
-            onChange={setCurrent}
-            prefix={currentPrefix}
-            onPrefixChange={setCurrentPrefix}
-            unit="A"
-            calculate={calculate}
-            isFlash={flashField === "current"}
-          />
-          <InputWithPrefix
-            ref={resistanceRef}
-            label="Resistance"
-            value={Number(resistance)}
-            onChange={setResistance}
-            prefix={resistancePrefix}
-            onPrefixChange={setResistancePrefix}
-            unit="Ω"
-            calculate={calculate}
-            isFlash={flashField === "resistance"}
-          />
-          {/* space so it is offset and lines up */}
-          <InputWrapper label=" ">
-            <Button
-              onClick={calculate}
-              fullWidth
-              // if 2 or more values are missing, disable the button
-              disabled={(() => {
-                let missingValues = 0;
-                if (!voltage) {
-                  missingValues++;
-                }
-                if (!current) {
-                  missingValues++;
-                }
-                if (!resistance) {
-                  missingValues++;
-                }
-                return missingValues > 1;
-              })()}
-            >
-              {voltage &&
-              current &&
-              resistance &&
-              lastCalculatedValues.voltageInput === getValue("voltage") &&
-              lastCalculatedValues.currentInput === getValue("current") &&
-              lastCalculatedValues.resistanceInput === getValue("resistance")
-                ? "Reset"
-                : "Calculate"}
-            </Button>
-          </InputWrapper>
+        <Group grow justify="center" wrap="wrap" align="flex-end">
+          <div style={{ flex: "1 1 200px", minWidth: "200px" }}>
+            <InputWithPrefix
+              ref={voltageRef}
+              label="Voltage"
+              value={Number(voltage)}
+              onChange={setVoltage}
+              prefix={voltPrefix}
+              onPrefixChange={setVoltPrefix}
+              unit="V"
+              calculate={calculate}
+              isFlash={flashField === "voltage"}
+            />
+          </div>
+          <div style={{ flex: "1 1 200px", minWidth: "200px" }}>
+            <InputWithPrefix
+              ref={currentRef}
+              label="Current"
+              value={Number(current)}
+              onChange={setCurrent}
+              prefix={currentPrefix}
+              onPrefixChange={setCurrentPrefix}
+              unit="A"
+              calculate={calculate}
+              isFlash={flashField === "current"}
+            />
+          </div>
+          <div style={{ flex: "1 1 200px", minWidth: "200px" }}>
+            <InputWithPrefix
+              ref={resistanceRef}
+              label="Resistance"
+              value={Number(resistance)}
+              onChange={setResistance}
+              prefix={resistancePrefix}
+              onPrefixChange={setResistancePrefix}
+              unit="Ω"
+              calculate={calculate}
+              isFlash={flashField === "resistance"}
+            />
+          </div>
+          <div style={{ flex: "0 0 auto", minWidth: "120px" }}>
+            <InputWrapper label=" ">
+              <Button
+                onClick={calculate}
+                fullWidth
+                disabled={(() => {
+                  let missingValues = 0;
+                  if (!voltage) {
+                    missingValues++;
+                  }
+                  if (!current) {
+                    missingValues++;
+                  }
+                  if (!resistance) {
+                    missingValues++;
+                  }
+                  return missingValues > 1;
+                })()}
+              >
+                {voltage &&
+                current &&
+                resistance &&
+                lastCalculatedValues.voltageInput === getValue("voltage") &&
+                lastCalculatedValues.currentInput === getValue("current") &&
+                lastCalculatedValues.resistanceInput === getValue("resistance")
+                  ? "Reset"
+                  : "Calculate"}
+              </Button>
+            </InputWrapper>
+          </div>
         </Group>
+      <div style={{ overflowX: "auto" }}>
         <History history={history} />
+      </div>
       </Flex>
     </>
   );

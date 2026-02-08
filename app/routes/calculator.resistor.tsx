@@ -1,10 +1,7 @@
 import {
   Button,
   Card,
-  Flex,
   Group,
-  NumberInput,
-  Select,
   Stack,
   Table,
   Text,
@@ -333,22 +330,24 @@ export default function ResistorCalculator() {
           <Text size="sm" fw={500} mt="md">
             History
           </Text>
-          <Table>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>Expression</Table.Th>
-                <Table.Th>Result</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {history.map((item, index) => (
-                <Table.Tr key={index}>
-                  <Table.Td>{item.expression}</Table.Td>
-                  <Table.Td>{item.result}</Table.Td>
+          <div style={{ overflowX: "auto" }}>
+            <Table>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Expression</Table.Th>
+                  <Table.Th>Result</Table.Th>
                 </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
+              </Table.Thead>
+              <Table.Tbody>
+                {history.map((item, index) => (
+                  <Table.Tr key={`${item.expression}-${index}`}>
+                    <Table.Td>{item.expression}</Table.Td>
+                    <Table.Td>{item.result}</Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </div>
         </>
       )}
     </Stack>

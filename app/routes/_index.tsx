@@ -1,17 +1,13 @@
-import { MetaFunction, useNavigate } from "@remix-run/react";
-import { useEffect } from "react";
-import Calculator from "./calculator";
+import { MetaFunction, redirect } from "@remix-run/node";
 
 export const meta: MetaFunction = () => {
-  return [{ title: "Homepage" }, { name: "description", content: "Homepage" }];
+  return [{ title: "Electrical Calculator" }, { name: "description", content: "Electrical calculation tools" }];
 };
 
+export function loader() {
+  return redirect("/calculator");
+}
+
 export default function Index() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    navigate("/calculator");
-  }, [navigate]);
-
-  return <Calculator />;
+  return null;
 }

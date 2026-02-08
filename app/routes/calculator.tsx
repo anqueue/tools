@@ -1,5 +1,5 @@
 import { Container, Tabs, Title } from "@mantine/core";
-import { Outlet, useLocation, useNavigate } from "@remix-run/react";
+import { Outlet, PrefetchPageLinks, useLocation, useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import GitHubButton from "~/components/GitHubLogo";
 
@@ -44,6 +44,10 @@ export default function Calculator() {
 
   return (
     <Container mt="xl">
+      {/* Prefetch all calculator routes for instant navigation */}
+      {PAGES.map((page) => (
+        <PrefetchPageLinks key={page.path} page={page.path} />
+      ))}
       <div
         style={{
           position: "relative",
@@ -71,7 +75,7 @@ export default function Calculator() {
             height: "100%",
           }}
         >
-          <Title order={2} c="var(--mantine-color-gray-4  )">
+          <Title order={2} c="var(--mantine-color-gray-4)">
             Electrical Calculator
           </Title>
         </div>
@@ -81,15 +85,23 @@ export default function Calculator() {
         defaultValue={PAGES[0].path}
         value={activeTab}
         onChange={handleTabChange}
-        style={{}}
       >
         <Tabs.List
           style={{
             justifyContent: "center",
+            flexWrap: "wrap",
+            gap: "var(--mantine-spacing-xs)",
+            willChange: "transform",
           }}
         >
           {PAGES.map((page) => (
-            <Tabs.Tab key={page.path} value={page.path}>
+            <Tabs.Tab
+              key={page.path}
+              value={page.path}
+              style={{
+                willChange: "background-color, color",
+              }}
+            >
               {page.title}
             </Tabs.Tab>
           ))}

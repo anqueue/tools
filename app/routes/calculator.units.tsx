@@ -185,27 +185,39 @@ export default function UnitConverter() {
       <Card withBorder p="md">
         <Flex direction="column" gap="md">
           {/* Main conversion row */}
-          <Flex gap="md" align="flex-end" justify="center">
-            <PrefixInput
-              label="From"
-              value={inputValue}
-              onChange={setInputValue}
-              prefix={inputPrefix}
-              onPrefixChange={setInputPrefix}
-            />
+          <Group grow justify="center" wrap="wrap" align="flex-end">
+            <div style={{ flex: "1 1 200px", minWidth: "150px" }}>
+              <PrefixInput
+                label="From"
+                value={inputValue}
+                onChange={setInputValue}
+                prefix={inputPrefix}
+                onPrefixChange={setInputPrefix}
+              />
+            </div>
 
-            <Text size="xl" c="dimmed" style={{ marginBottom: "8px" }}>
+            <Text
+              size="xl"
+              c="dimmed"
+              style={{
+                marginBottom: "8px",
+                textAlign: "center",
+                flex: "0 0 auto",
+              }}
+            >
               →
             </Text>
 
-            <PrefixInput
-              label="To"
-              value={result !== null ? formatValue(result) : ""}
-              prefix={outputPrefix}
-              onPrefixChange={setOutputPrefix}
-              readOnly
-            />
-          </Flex>
+            <div style={{ flex: "1 1 200px", minWidth: "150px" }}>
+              <PrefixInput
+                label="To"
+                value={result !== null ? formatValue(result) : ""}
+                prefix={outputPrefix}
+                onPrefixChange={setOutputPrefix}
+                readOnly
+              />
+            </div>
+          </Group>
 
           {/* Action buttons */}
           <Group justify="center" gap="sm">

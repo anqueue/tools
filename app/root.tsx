@@ -37,6 +37,18 @@ const theme = createTheme({
 });
 
 export const links: LinksFunction = () => [
+  // Preconnect to Google Fonts for faster loading
+  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+  // Preload critical font file to prevent FOIT
+  {
+    rel: "preload",
+    href: "https://fonts.gstatic.com/s/robotomono/v23/L0xuDF4xlVMF-BfR8bXMIhJHg45mwgGEFl0_3vq_S-W4Ep0.woff2",
+    as: "font",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  },
+  // Load fonts with display=swap for instant text rendering
   {
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
