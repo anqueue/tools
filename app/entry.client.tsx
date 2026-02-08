@@ -8,20 +8,6 @@ import { RemixBrowser } from "@remix-run/react";
 import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
 
-// Register service worker for PWA functionality
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("/sw.js")
-      .then((registration) => {
-        console.log("SW registered:", registration);
-      })
-      .catch((error) => {
-        console.log("SW registration failed:", error);
-      });
-  });
-}
-
 startTransition(() => {
   hydrateRoot(
     document,

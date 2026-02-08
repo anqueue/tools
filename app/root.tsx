@@ -37,10 +37,6 @@ const theme = createTheme({
 });
 
 export const links: LinksFunction = () => [
-  // PWA manifest
-  { rel: "manifest", href: "/manifest.webmanifest" },
-  // Theme color for browser chrome
-  { rel: "icon", type: "image/svg+xml", href: "/icon.svg" },
   // Preconnect to Google Fonts for faster loading
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
@@ -69,9 +65,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#212326" />
-        <title>Engineering Calculator</title>
-        <meta name="description" content="Engineering calculators and utilities" />
         <ColorSchemeScript />
         <Meta />
         <Links />
@@ -82,7 +75,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           forceColorScheme="dark"
           theme={theme}
         >
-          <main>{children}</main>
+          {children}
         </MantineProvider>
         <ScrollRestoration />
         <Scripts />
